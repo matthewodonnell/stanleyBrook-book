@@ -1,0 +1,36 @@
+--- 
+title: "The West Brook Story"
+author: "Ben Letcher"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook: default
+bibliography:
+- book.bib
+- packages.bib
+biblio-style: apalike
+link-citations: yes
+description: This book describes accessing, cleaning, and analyzing data from the West Brook Study in western MA, USA
+cover-image: images/westBrook.jpg
+favicon: images/favicon.ico
+github-repo: bletcher/westBrook-book
+---
+
+# Introduction
+
+This book describes accessing, cleaning, and analyzing data from the West Brook Study in Whateley MA, USA.
+
+Use `bookdown::render_book("index.Rmd", "bookdown::gitbook")` to force html book. `bookdown::preview_chapter("01-modelsCMR_Flow.Rmd", "bookdown::gitbook")` to update just one chapter (01-modelsCMR_Flow.Rmd as example here). 
+
+Use `clean_book()` to clean up temporary files.
+
+
+## The West Brook
+The Ecology Section at the USGS Conte Laboratory has studied fish in the West Brook since 1997. The goal is to understand the strength and direction of drivers on fish growth, movement, reproduction and survival in the wild. We hope to provide a comprehensive understanding of fish population dynamics and ultimately individual fitness (natural selection and evolution) in the study area.  
+
+[Interactive applications](https://pitdata.ecosheds.org/) allow exploration of the raw data.
+```{r, echo = FALSE}
+knitr::include_url("https://pitdata.ecosheds.org/", height = "700px")
+```
+

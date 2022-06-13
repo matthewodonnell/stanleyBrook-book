@@ -1,0 +1,42 @@
+# Get data {#getData}
+
+```{r globalGetData, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+The server hosting the data is named osensei and is at UMass (osensei.cns.umass.edu). It can be accessed using functions in the 'getWBData' package. Use
+`devtools::install_github('Conte-Ecology/westBrookData/getWBData')` to install. Most of the functions will run reconnect() to connect to the server with your username and password. Run `reconnect()` from the console to connect if necessary. Use `conDplyr` to see the list of available tables on the server. Details about the 'getWBData' package are 
+[here](https://github.com/Conte-Ecology/westBrookData/blob/master/getWBData/vignettes/getWBDataTutorial.pdf).     
+
+
+```{r librariesGetData, echo = FALSE}
+library(getWBData)
+library(tidyverse)
+library(lubridate)
+library(validate)
+```
+
+We have two types of databases: Environmental and fish
+
+The environmental database contains daily mean temperature and flow data. Flow data are from a flow extension model and are not tributary-specific. Temperature data are from tributary-specific loggers.
+
+There are four main fish databases we want to create:    
+1. **cdsB_electro0** West Brook electrofishing data, 3 species (brook trout, brown trout and Atlantic salmon), tagged and untagged fish  
+2. **cdsB_CMR0** West Brook electrofishing data formatted for Capture-Mark-Recapture analysis for tagged individuals  
+3. **cdsB_wanding0** West Brook wanding (portable antenna) data, all tagged salmonids  
+4. **cdsB_antenna0** West Brook stationary antenna data, all tagged salmonids  
+
+The "0" at the end of these file names indicates that they are the initial files that will be wrangled in the next step (next chapter). "cd" stands for "core data".  
+
+The `getNew_...` variables determine whether the data are retrieved from the server. Change to 'TRUE' to get a new data frame, e.g. when there are new data on the server.
+```{r switchesCD}
+getNew_envDatasB <- TRUE
+
+getNew_cdsB_electro0 <- TRUE
+getNew_cdsB_CMR0 <- TRUE
+getNew_cdsB_wanding0 <- TRUE
+getNew_cdsB_antenna0 <- TRUE
+
+
+```
+

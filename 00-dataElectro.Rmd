@@ -1,0 +1,118 @@
+## Electrofishing data {#dataElectro}
+
+This section retrieves electrofishing data, including both tagged and untagged fish. Fish were untagged if they were too small (< 60 mm, 2 g wet weight) or were captured outside of the core study area (tributaries and 47 sections of the mainstem West Brook).
+```{r globalGetDataElectro, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+
+```{r librariesDataElectro, echo = FALSE}
+# library(devtools)
+# install_github(repo = "Conte-Ecology/westBrookData", subdir = "getWBData")
+library(getWBData)
+library(tidyverse)
+library(lubridate)
+#library(validate)
+
+ devtools::install_github('bletcher/getPrepareWBData')
+# use this if command above doesn't work: options(download.file.method = "wininet")
+
+library(getPrepareWBData) # this has functions for preparing West Brook data
+```
+
+### Get data
+```{r cdWB_electro0}
+
+# default values for createCoreData()
+# function (sampleType = "electrofishing", baseColumns = T, 
+#    columnsToAdd = NULL, includeUntagged = F, whichDrainage = "west") 
+
+if(getNew_cdsB_electro0) {
+  cdsB_electro0 <- createCoreData(
+        sampleType = "electrofishing",  #"stationaryAntenna","portableAntenna"
+        columnsToAdd = c("sampleNumber",
+                         "river",
+                         "survey",
+                         "pass",
+                         "observedLength",
+                         "observedWeight",
+                         "comments"),
+        includeUntagged = TRUE,
+        whichDrainage = "west"
+      ) %>%
+      addTagProperties(
+        columnsToAdd = c("cohort",
+                         "species",
+                         "dateEmigrated",
+                         "sex",
+                         "species"
+        )
+      ) %>%
+      dplyr::filter(species %in% c( "bkt","bnt","ats"),
+                    area %in% c("trib","inside","below","above"),
+                    !is.na(sampleNumber)) %>%
+      addSampleProperties() %>%
+      addEnvironmental() #this crashes for stanley data
+  
+  save(cdsB_electro0, file = './data/cdsB_electro0.RData')
+  
+} else {
+  load(file = './data/cdsB_electro0.RData')
+}
+str(cdsB_electro0)
+```
+
+### Wrangle data
+
+
+```{r globalWrangle, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+This section takes cdsB_electro0 and cleans it to create cdsB_electro.  
+
+```{r}
+reclean_cdsB_electro <- FALSE
+```
+
+
+```{r wrangleElectroMain, cache = TRUE}
+
+if(reclean_cdsB_electro){
+  drainage <- 'west'
+
+  # functions in getPrepareWBData library
+  cdsB_electro <- cdsB_electro0 %>%
+    cleanData(drainage) %>%
+    mergeSites(drainage) %>%
+    addNPasses(drainage) %>%
+    mutate(drainage = drainage)
+  
+  save(cdsB_electro, file = './data/cdsB_electro.RData')
+  
+} else {
+  load(file = './data/cdsB_electro.RData')
+}
+```
+
+### Explore data
+
+```{r lw, cache = TRUE}
+
+ggplot(cdsB_electro, aes(observedLength, observedWeight, color = species)) +
+  geom_point(alpha = 0.1) +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_publication() +
+  facet_wrap(~ species)
+
+lwReg <- cdsB_electro %>%
+  nest_by(species) %>%
+  mutate(reg = list(lm(log(observedWeight) ~ log(observedLength), data = data)))
+
+lwReg %>% summarise(broom::tidy(reg))  
+lwReg %>% summarise(broom::glance(reg))
+```
+
+
+

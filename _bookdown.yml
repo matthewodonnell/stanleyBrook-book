@@ -1,0 +1,20 @@
+book_filename: "westBrook-book"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+output_dir: "docs"
+rmd_files:
+- index.Rmd
+- 00-getData.Rmd
+- 00-getEnvData.Rmd
+- 00-dataElectro.Rmd
+- 00-dataCMR.Rmd
+- 00-dataWanding.Rmd
+- 00-dataAntenna.Rmd
+- 01-models.Rmd
+- 01-modelsYOY.Rmd
+- 01-modelsFlow.Rmd
+- 01-modelsCMR_Flow.Rmd
+- 06-summary.Rmd
+- 17-references.Rmd
